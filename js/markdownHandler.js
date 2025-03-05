@@ -129,7 +129,8 @@ export class MarkdownHandler {
         const content = document.createElement('div');
         content.className = 'card-content';
         content.contentEditable = 'false';
-        content.textContent = text;
+        // 使用 innerHTML 并将换行符替换为 <br> 以保留换行
+        content.innerHTML = text.replace(/\n/g, '<br>');
         
         // 双击启用编辑
         content.addEventListener('dblclick', (e) => {
@@ -225,7 +226,7 @@ export class MarkdownHandler {
             if (draggedCard) {
                 // 获取容器的位置信息
                 const containerRect = this.container.getBoundingClientRect();
-
+                
                 // 获取卡片的当前位置信息
                 const cardRect = draggedCard.getBoundingClientRect();
 
@@ -297,4 +298,4 @@ export class MarkdownHandler {
             addButton.addEventListener('click', (e) => this.addNewCard(e));
         }
     }
-} 
+}

@@ -507,7 +507,6 @@ async function showOllamaDialog() {
     dialog.querySelector('.confirm-btn').addEventListener('click', () => {
         if (!window.ollamaModel) {
             alert('请选择一个模型');
-            return;
         }
         dialog.remove();
     });
@@ -769,9 +768,6 @@ async function callAIAPI(message, model, callback) {
             throw error;
         }
     }
-    
-    // return mockApiCall(message, model);
-    callback(mockApiCall(message, model));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -816,4 +812,4 @@ function selectCard(cardId) {
     if (this.onCardSelected) {
         this.onCardSelected(this.selectedCard);
     }
-} 
+}
