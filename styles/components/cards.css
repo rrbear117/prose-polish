@@ -120,6 +120,12 @@
     box-shadow: inset 0 0 0 2px var(--color-primary);
 }
 
+/* 高亮动画样式 */
+.paragraph-card.highlight {
+    border-color: var(--color-primary); /* 蓝色边框 */
+    box-shadow: 0 0 0 2px var(--color-primary); /* 可选：添加蓝色阴影 */
+}
+
 /* 卡片操作按钮 - 基础样式 */
 .card-actions {
     position: absolute;
@@ -202,4 +208,4 @@
     display: flex;
     gap: var(--spacing-sm);
     align-items: center;
-} 
+}

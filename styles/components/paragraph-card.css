@@ -1,0 +1,17 @@
+/* styles/components/paragraph-card.css */
+.paragraph-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.paragraph-card.highlight {
+    border-color: blue;
+    animation: highlight-animation 3s ease-out;
+}
+
+@keyframes highlight-animation {
+    0% { border-color: blue; }
+    100% { border-color: #ccc; }
+}

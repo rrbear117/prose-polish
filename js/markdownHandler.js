@@ -162,11 +162,18 @@ export class MarkdownHandler {
         // 位置将由 createCards 方法设置
         card.style.zIndex = this.currentZIndex++;
         
+        
         this.cards.push(card);
         this.container.appendChild(card);
+        
+        // 添加高亮动画
+        card.classList.add('highlight');
+        setTimeout(() => {
+            card.classList.remove('highlight');
+        }, 3000); // 3秒后移除高亮类
+
         return card;
     }
-
     // 设置拖拽功能
     setupDragAndDrop() {
         let draggedCard = null;
