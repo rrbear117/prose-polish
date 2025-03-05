@@ -172,6 +172,7 @@ export class MarkdownHandler {
             }
             exportContent.appendChild(clonedCard);
             clonedCard.style=null;
+            card.remove(); // 移除原卡片
         };
         card.appendChild(exportButton);
         

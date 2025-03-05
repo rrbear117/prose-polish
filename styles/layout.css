@@ -138,6 +138,12 @@ header h1 {
     margin-bottom: 10px;
 }
 
+.export-content .paragraph-card .text-card-port {
+    display: none;
+}
+.export-content .paragraph-card .text-card-chain-port {
+    display: none;
+}
 .export-content:hover {
     background-color: var(--color-bg-secondary);
 }

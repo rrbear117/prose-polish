@@ -282,7 +282,7 @@ document.getElementById('import-button').addEventListener('click', () => {
 
 // 导出Markdown文件
 document.getElementById('export-button').addEventListener('click', () => {
-    const cards = Array.from(document.querySelectorAll('.paragraph-card'));
+    const cards = Array.from(document.querySelectorAll('#export-output .paragraph-card'));
     
     // 按y坐标排序，y相同时按x坐标排序
     cards.sort((a, b) => {
