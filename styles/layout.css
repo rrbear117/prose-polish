@@ -156,3 +156,7 @@ header h1 {
 #export-output{
     width:315px;
 }
+
+.output-container{
+    height: 100px;
+}
