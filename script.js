@@ -166,6 +166,28 @@ submitButton.addEventListener('click', async () => {
     const selectedCard = cardManager.selectedCard;
     if (!selectedCard) return;
 
+    // 创建弹出窗口
+    const dialog = document.createElement('div');
+    dialog.className = 'llm-dialog';
+    dialog.innerHTML = `
+        <div class="llm-content">
+            <h3>AI思考中...</h3>
+            <div id="llm-output" class="llm-output-content">
+                加载中...
+            </div>
+            <div class="llm-buttons">
+                <button id="insert-card-button" class="insert-card-button">插入卡片</button>
+                <button id="close-dialog-button" class="close-dialog-button">关闭</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(dialog);
+
+    // 获取输出区域和按钮
+    const llmOutput = dialog.querySelector('#llm-output');
+    const insertCardButton = dialog.querySelector('#insert-card-button');
+    const closeDialogButton = dialog.querySelector('#close-dialog-button');
+
     try {
         // 获取替换了占位符的提示词
         const prompt = selectedCard.getPromptWithConnections();
@@ -185,16 +207,38 @@ submitButton.addEventListener('click', async () => {
         
         console.log('提示词:', prompt);
 
-        promptOutput.textContent = 'AI思考中...';
+        // promptOutput.textContent = 'AI思考中...';
         submitButton.disabled = true;
 
-        const response = await callAIAPI(prompt, modelInfo.model);
-        promptOutput.textContent = response;
+        // 调用 AI API 并流式显示结果
+        let result = '';
+        await callAIAPI(prompt, modelInfo.model, (chunk) => {
+            result += chunk;
+            llmOutput.textContent = result;
+            llmOutput.scrollTop = llmOutput.scrollHeight;
+        });
+
+        // const response = await callAIAPI(prompt, modelInfo.model);
+        // llmOutput.textContent = response;
     } catch (error) {
-        promptOutput.textContent = `错误：${error.message}`;
+        llmOutput.textContent = `错误：${error.message}`;
     } finally {
         submitButton.disabled = false;
     }
+
+    // 插入卡片按钮点击事件
+    insertCardButton.addEventListener('click', () => {
+        const content = llmOutput.textContent.trim();
+        if (content) {
+            markdownHandler.createCard(content);
+        }
+        dialog.remove();
+    });
+
+    // 关闭按钮点击事件
+    closeDialogButton.addEventListener('click', () => {
+        dialog.remove();
+    });
 });
 
 // 初始化 Markdown 处理器
@@ -531,7 +575,7 @@ function initializeModelSelector() {
 }
 
 // 修改 callAIAPI 函数
-async function callAIAPI(message, model) {
+async function callAIAPI(message, model, callback) {
     const modelInfo = window.getCurrentModel();
     
     // Ollama 模式，不受开发模式影响
@@ -568,7 +612,7 @@ async function callAIAPI(message, model) {
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
             let result = '';
-            promptOutput.textContent = '';
+            // promptOutput.textContent = '';
             const processStream = async () => {
                 while (true) {
                     const { done, value } = await reader.read();
@@ -577,8 +621,9 @@ async function callAIAPI(message, model) {
                         const chunk = JSON.parse(decoder.decode(value, { stream: true }));
                         if(chunk.response) {
                             result += chunk.response;
-                            promptOutput.textContent += chunk.response;
-                            promptOutput.scrollTop = promptOutput.scrollHeight;
+                            // promptOutput.textContent += chunk.response;
+                            // promptOutput.scrollTop = promptOutput.scrollHeight;
+                            callback(chunk.response); // 调用回调函数
                         }
                     } catch { }
                 }
@@ -633,7 +678,8 @@ async function callAIAPI(message, model) {
 
             const data = await response.json();
             console.log('自定义模型响应数据:', data);
-            return data.choices[0].message.content;
+            // return data.choices[0].message.content;
+            callback(data.choices[0].message.content);
         } catch (error) {
             throw error;
         }
@@ -673,7 +719,8 @@ async function callAIAPI(message, model) {
 
             const data = await response.json();
             console.log('通义千问响应数据:', data);
-            return data.output?.choices?.[0]?.message.content;
+            // return data.output?.choices?.[0]?.message.content;
+            callback(data.output?.choices?.[0]?.message.content);
         } catch (error) {
             throw error;
         }
@@ -682,8 +729,8 @@ async function callAIAPI(message, model) {
             throw new Error('DeepSeek API 密钥未配置');
         }
 
-        const modelName = modelInfo.model === 'deepseek-v3' ? 
-            MODEL_CONFIG.DEEPSEEK.MODELS.V3 : 
+        const modelName = modelInfo.model === 'deepseek-v3' ?
+            MODEL_CONFIG.DEEPSEEK.MODELS.V3 :
             MODEL_CONFIG.DEEPSEEK.MODELS.R1;
 
         try {
@@ -716,13 +763,15 @@ async function callAIAPI(message, model) {
 
             const data = await response.json();
             console.log('DeepSeek响应数据:', data);
-            return data.choices[0].message.content;
+            // return data.choices[0].message.content;
+            callback(data.choices[0].message.content);
         } catch (error) {
             throw error;
         }
     }
     
-    return mockApiCall(message, model);
+    // return mockApiCall(message, model);
+    callback(mockApiCall(message, model));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
