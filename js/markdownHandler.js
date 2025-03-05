@@ -136,7 +136,41 @@ export class MarkdownHandler {
         exportButton.onclick = (e) => {
             e.stopPropagation();
             const exportContent = document.querySelector('.export-content');
-            exportContent.appendChild(card.cloneNode(true));
+            const clonedCard = card.cloneNode(true);
+            // 重新绑定删除按钮事件
+            const deleteButton = clonedCard.querySelector('.card-actions button');
+            if (deleteButton) {
+                deleteButton.onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm('确定要删除这个卡片吗？')) {
+                        // 删除指向该卡片的连接
+                        const cardId = clonedCard.dataset.cardId;
+                        if (window.connectionManager) {
+                            // 删除蓝色插座的连接（包括来自提示词卡片和其他文本卡片的连接）
+                            const textCardPort = clonedCard.querySelector('.text-card-port');
+                            if (textCardPort) {
+                                window.connectionManager.removePortConnection(textCardPort);
+                            }
+                            
+                            // 删除紫色插头的连接（该卡片发起的链式连接）
+                            const chainPort = clonedCard.querySelector('.text-card-chain-port');
+                            if (chainPort) {
+                                window.connectionManager.removePortConnection(chainPort);
+                            }
+                            
+                            // 删除指向该卡片的所有连接
+                            window.connectionManager.connections.forEach((connection, connectionId) => {
+                                if (connection.endPort.closest('.paragraph-card')?.dataset.cardId === cardId) {
+                                    window.connectionManager.removePortConnection(connection.startPort);
+                                }
+                            });
+                        }
+                        
+                        clonedCard.remove();
+                    }
+                };
+            }
+            exportContent.appendChild(clonedCard);
         };
         card.appendChild(exportButton);
         
