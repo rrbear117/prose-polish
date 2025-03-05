@@ -88,8 +88,9 @@ paragraphContainer.addEventListener('drop', (e) => {
 
         // 创建新卡片
         const card = markdownHandler.createCard(content);
-        card.style.left = `${x - 150}px`; // 卡片宽度的一半
-        card.style.top = `${y - 75}px`;  // 卡片高度的一半
+        card.style.position = 'relative';
+        // card.style.left = `${x - 150}px`; // 卡片宽度的一半
+        // card.style.top = `${y - 75}px`;  // 卡片高度的一半
 
         // 添加导出按钮
         const exportButton = document.createElement('button');
@@ -98,7 +99,11 @@ paragraphContainer.addEventListener('drop', (e) => {
 
         exportButton.addEventListener('click', () => {
             const exportContainer = document.querySelector('.export-container');
-            exportContainer.appendChild(card.cloneNode(true));
+            const clonedCard = card.cloneNode(true);
+            clonedCard.style.position = 'relative';
+            clonedCard.style.removeProperty('left');
+            clonedCard.style.removeProperty('top');
+            exportContainer.appendChild(clonedCard);
         });
     }
 });
@@ -786,6 +791,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeModelSelector();
     
     // ... existing initialization code ...
+
+    const exportOutput = document.getElementById('export-output');
+    Sortable.create(exportOutput, {
+        animation: 150,
+        // 其他配置项
+    });
 });
 
 // 修改 PromptCardManager 类中的 selectCard 函数

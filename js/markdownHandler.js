@@ -171,6 +171,7 @@ export class MarkdownHandler {
                 };
             }
             exportContent.appendChild(clonedCard);
+            clonedCard.style=null;
         };
         card.appendChild(exportButton);
         
