@@ -126,7 +126,7 @@ export class MarkdownHandler {
         card.appendChild(actions);
 
         // 添加导出按钮
-        const exportButton = document.createElement('div');
+        const exportButton = document.createElement('button');
         exportButton.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
                 <path d="M12 4L12 16M12 4L8 8M12 4L16 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -174,7 +174,7 @@ export class MarkdownHandler {
             clonedCard.style=null;
             card.remove(); // 移除原卡片
         };
-        card.appendChild(exportButton);
+        actions.appendChild(exportButton);
         
         // 添加内容区域
         const content = document.createElement('div');
@@ -282,30 +282,43 @@ export class MarkdownHandler {
         // 鼠标松开时
         const mouseUp = () => {
             if (draggedCard) {
-                // 获取容器的位置信息
-                const containerRect = this.container.getBoundingClientRect();
+                // 获取拖拽结束位置的元素
+                const elementUnderMouse = document.elementFromPoint(event.clientX, event.clientY);
                 
-                // 获取卡片的当前位置信息
-                const cardRect = draggedCard.getBoundingClientRect();
-
-                // 确保卡片在容器范围内
-                let newX = parseInt(draggedCard.style.left) || 0;
-                let newY = parseInt(draggedCard.style.top) || 0;
-
-                // 检查左边范围
-                if (newX < 0) {
-                    newX = 0;
+                // 检查是否在导出区域
+                if (elementUnderMouse.closest('.export-column')) {
+                    // 取消拖拽操作，恢复卡片到原始位置
+                    draggedCard.style.left = `${initialCardX}px`;
+                    draggedCard.style.top = `${initialCardY}px`;
+                } else {
+                    // 获取容器的位置信息
+                    const containerRect = this.container.getBoundingClientRect();
+                    
+                    // 获取卡片的当前位置信息
+                    const cardRect = draggedCard.getBoundingClientRect();
+        
+                    // 确保卡片在容器范围内
+                    let newX = parseInt(draggedCard.style.left) || 0;
+                    let newY = parseInt(draggedCard.style.top) || 0;
+        
+                    // 检查左边范围
+                    if (newX < 0) {
+                        newX = 0;
+                    }
+        
+                    // 检查上边范围
+                    if (newY < 0) {
+                        newY = 0;
+                    }
+        
+                    // 更新卡片位置
+                    draggedCard.style.left = `${newX}px`;
+                    draggedCard.style.top = `${newY}px`;
+        
+                    // 更新连接线
+                    window.connectionManager?.updateConnections();
                 }
-
-                // 检查上边范围
-                if (newY < 0) {
-                    newY = 0;
-                }
-
-                // 更新卡片位置
-                draggedCard.style.left = `${newX}px`;
-                draggedCard.style.top = `${newY}px`;
-
+        
                 // 恢复过渡效果
                 draggedCard.style.transition = '';
                 draggedCard = null;
