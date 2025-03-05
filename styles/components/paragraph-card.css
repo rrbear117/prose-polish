@@ -15,3 +15,13 @@
     0% { border-color: blue; }
     100% { border-color: #ccc; }
 }
+
+.paragraph-card .card-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.paragraph-card .card-actions button {
+    margin-left: 5px;
+    cursor: pointer;
+}

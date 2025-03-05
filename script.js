@@ -43,7 +43,7 @@ const cardManager = new PromptCardManager(cardContainer);
 const markdownHandler = new MarkdownHandler(paragraphContainer);
 const connectionManager = new ConnectionManager();
 
-// 将管理器暴露到全局，供其他模块使用
+
 window.cardManager = cardManager;
 window.connectionManager = connectionManager;
 
@@ -85,15 +85,25 @@ paragraphContainer.addEventListener('drop', (e) => {
         const scrollTop = paragraphContainer.scrollTop; // 获取容器的垂直滚动位置
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top + scrollTop; // 加上滚动偏移
-        
+
         // 创建新卡片
         const card = markdownHandler.createCard(content);
         card.style.left = `${x - 150}px`; // 卡片宽度的一半
         card.style.top = `${y - 75}px`;  // 卡片高度的一半
+
+        // 添加导出按钮
+        const exportButton = document.createElement('button');
+        exportButton.textContent = '导出';
+        card.appendChild(exportButton);
+
+        exportButton.addEventListener('click', () => {
+            const exportContainer = document.querySelector('.export-container');
+            exportContainer.appendChild(card.cloneNode(true));
+        });
     }
 });
 
-// 添加默认卡片
+
 async function addDefaultCards() {
     // 添加第一个卡片
     const card1 = cardManager.addCard(
@@ -244,7 +254,6 @@ submitButton.addEventListener('click', async () => {
 // 初始化 Markdown 处理器
 markdownHandler.init();
 
-// 创建隐藏的文件输入框
 const fileInput = document.createElement('input');
 fileInput.type = 'file';
 fileInput.accept = '.md';
@@ -321,7 +330,7 @@ document.getElementById('clear-paragraphs').addEventListener('click', () => {
     }
 });
 
-// 模拟API调用
+
 async function mockApiCall(message, model) {
     // 模拟网络延迟
     await new Promise(resolve => setTimeout(resolve, 500));

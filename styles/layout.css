@@ -109,7 +109,7 @@ header h1 {
 }
 
 /* 输出容器 */
-.output-container {
+.export-container {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: var(--spacing-md);
@@ -120,7 +120,7 @@ header h1 {
     max-height: 200px;
 }
 
-.output-content {
+.export-content {
     flex: 1;
     overflow-y: auto;
     font-size: 14px;
@@ -131,11 +131,18 @@ header h1 {
     padding-right: var(--spacing-sm);
 }
 
-.output-content:hover {
+.export-content .paragraph-card {
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    margin-bottom: 10px;
+}
+
+.export-content:hover {
     background-color: var(--color-bg-secondary);
 }
 
-.output-content[draggable="true"]:active {
+.export-content[draggable="true"]:active {
     cursor: grabbing;
     opacity: 0.7;
 } 

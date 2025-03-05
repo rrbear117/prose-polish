@@ -124,6 +124,21 @@ export class MarkdownHandler {
         };
         actions.appendChild(deleteBtn);
         card.appendChild(actions);
+
+        // 添加导出按钮
+        const exportButton = document.createElement('div');
+        exportButton.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
+                <path d="M12 4L12 16M12 4L8 8M12 4L16 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M3 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        `;
+        exportButton.onclick = (e) => {
+            e.stopPropagation();
+            const exportContent = document.querySelector('.export-content');
+            exportContent.appendChild(card.cloneNode(true));
+        };
+        card.appendChild(exportButton);
         
         // 添加内容区域
         const content = document.createElement('div');

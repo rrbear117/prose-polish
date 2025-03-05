@@ -94,6 +94,12 @@ export class PromptCard {
             <div class="card-actions">
                 <button class="edit-btn">✎</button>
                 <button class="delete-btn">✕</button>
+                <button class="export-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4L12 16M12 4L8 8M12 4L16 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M3 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
             </div>
             <h3>${escapeHtml(this.title)}</h3>
             <div class="card-prompt">${this.prompt}</div>
@@ -120,6 +126,15 @@ export class PromptCard {
                 // 从卡片管理器中移除
                 window.cardManager.deleteCard(this.id);
             }
+        };
+
+        // 添加导出按钮事件
+        const exportBtn = card.querySelector('.export-btn');
+        exportBtn.onclick = (e) => {
+            e.stopPropagation();
+            const cardContent = this.element.cloneNode(true);
+            const exportContainer = document.querySelector('.export-container');
+            exportContainer.appendChild(cardContent);
         };
 
         return card;
