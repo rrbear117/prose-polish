@@ -65,7 +65,7 @@ export class MarkdownHandler {
     createCard(text = '', index = this.cards.length) {
         const card = document.createElement('div');
         card.className = 'paragraph-card';
-        card.dataset.editable = 'false';  // 添加编辑状态标记
+        card.dataset.editable = 'true';  // 添加编辑状态标记
         card.dataset.cardId = 'text_card_' + Date.now() + '_' + index;
         
         // 添加连接端口（左上角插座）

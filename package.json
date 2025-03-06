@@ -2,9 +2,10 @@
   "name": "ai-chat-app",
   "version": "1.0.0",
   "description": "AI聊天应用",
-  "main": "server.js",
+  "main": "electron-main.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "electron .",
+    "pack": "electron-builder --win portable",
     "dev": "live-server --port=3000 --no-browser"
   },
   "dependencies": {
@@ -14,6 +15,8 @@
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.6.0",
     "live-server": "^1.2.2"
   }
 }
