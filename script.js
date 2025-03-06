@@ -298,9 +298,15 @@ document.getElementById('export-button').addEventListener('click', () => {
 
     // 提取文本内容并用双换行符连接
     const content = cards
-        .map(card => card.querySelector('.card-content').textContent.trim())
-        .filter(text => text) // 过滤掉空文本
-        .join('\n\n');
+        .map(card => {
+            const content = card.querySelector('.card-content');
+            // 保留所有换行符并标准化为\n，保留首尾空白
+            return content.innerText
+                .replace(/\n\s*/g, '\n') // 合并多个空白换行为单个换行
+                .replace(/(^\n+|\n+$)/g, ''); // 仅移除首尾多余换行
+        })
+        .filter(text => text)
+        .join('\n\n'); // 用双换行分隔卡片
 
     // 创建Blob对象
     const blob = new Blob([content], { type: 'text/markdown' });
