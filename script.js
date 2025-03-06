@@ -86,25 +86,10 @@ paragraphContainer.addEventListener('drop', (e) => {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top + scrollTop; // 加上滚动偏移
 
-        // 创建新卡片
+        // 使用markdownHandler创建卡片并设置位置
         const card = markdownHandler.createCard(content);
-        card.style.position = 'relative';
-        // card.style.left = `${x - 150}px`; // 卡片宽度的一半
-        // card.style.top = `${y - 75}px`;  // 卡片高度的一半
-
-        // 添加导出按钮
-        const exportButton = document.createElement('button');
-        exportButton.textContent = '导出';
-        card.appendChild(exportButton);
-
-        exportButton.addEventListener('click', () => {
-            const exportContainer = document.querySelector('.export-container');
-            const clonedCard = card.cloneNode(true);
-            clonedCard.style.position = 'relative';
-            clonedCard.style.removeProperty('left');
-            clonedCard.style.removeProperty('top');
-            exportContainer.appendChild(clonedCard);
-        });
+        card.style.left = `${x - 150}px`; // 卡片宽度的一半
+        card.style.top = `${y - 75}px`;  // 卡片高度的一半
     }
 });
 
